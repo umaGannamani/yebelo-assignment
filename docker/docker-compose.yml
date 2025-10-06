@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  redpanda:
+    image: redpandadata/redpanda:v23.1.7
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp=1
+      - --memory=1G
+      - --reserve-memory=0M
+      - --node-id=0
+      - --check=false
+      - --kafka-addr=PLAINTEXT://0.0.0.0:9092,OUTSIDE://0.0.0.0:29092
+      - --advertise-kafka-addr=PLAINTEXT://redpanda:9092,OUTSIDE://localhost:29092
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - redpanda_network
+
+  console:
+    image: redpandadata/console:latest   # ✅ updated image
+    depends_on:
+      - redpanda
+    environment:
+      - KAFKA_BROKERS=redpanda:9092
+    ports:
+      - "8080:8080"
+    networks:
+      - redpanda_network
+
+networks:
+  redpanda_network:
+    driver: bridge
+
