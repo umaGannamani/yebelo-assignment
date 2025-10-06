@@ -1,0 +1,10 @@
+# dependencies
+node_modules/
+next_dashboard/node_modules/
+
+# build outputs
+.next/
+dist/
+
+# environment files
+.env
